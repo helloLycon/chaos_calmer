@@ -1,0 +1,103 @@
+--- a/drivers/mtd/tplinkpart.c
++++ b/drivers/mtd/tplinkpart.c
+@@ -180,15 +180,100 @@ err:
+ 	return ret;
+ }
+ 
++static int airbat_parse_partitions(struct mtd_info *master,
++                                   struct mtd_partition **pparts,
++                                   struct mtd_part_parser_data *data)
++{
++        struct mtd_partition *parts;
++        struct tplink_fw_header *header;
++        int nr_parts;
++        size_t offset;
++        size_t art_offset;
++        size_t rootfs_offset;
++        size_t squashfs_offset;
++        int ret;
++
++        nr_parts = 6;
++        parts = kzalloc(nr_parts * sizeof(struct mtd_partition), GFP_KERNEL);
++        if (!parts) {
++                ret = -ENOMEM;
++                goto err;
++        }
++
++        offset = TPLINK_KERNEL_OFFS;
++
++        header = tplink_read_header(master, offset);
++        if (!header) {
++                pr_notice("%s: no TP-Link header found\n", master->name);
++                ret = -ENODEV;
++                goto err_free_parts;
++        }
++
++        squashfs_offset = offset + sizeof(struct tplink_fw_header) +
++                          be32_to_cpu(header->kernel_len);
++
++        ret = tplink_check_rootfs_magic(master, squashfs_offset);
++        if (ret == 0)
++                rootfs_offset = squashfs_offset;
++        else
++                rootfs_offset = offset + be32_to_cpu(header->rootfs_ofs);
++
++        art_offset = master->size - TPLINK_ART_LEN;
++
++        parts[0].name = "u-boot";
++        parts[0].offset = 0;
++        parts[0].size = 0x10000;
++//	parts[0].mask_flags = MTD_WRITEABLE;
++
++        parts[1].name = "u-boot-env";
++        parts[1].offset = 0x10000;
++        parts[1].size = offset-0x10000;
++
++        parts[2].name = "kernel";
++        parts[2].offset = offset;
++        parts[2].size = rootfs_offset - offset;
++
++        parts[3].name = "rootfs";
++        parts[3].offset = rootfs_offset;
++        parts[3].size = art_offset - rootfs_offset;
++
++        parts[4].name = "art";
++        parts[4].offset = art_offset;
++        parts[4].size = TPLINK_ART_LEN;
++        parts[4].mask_flags = MTD_WRITEABLE;
++
++        parts[5].name = "firmware";
++        parts[5].offset = offset;
++        parts[5].size = art_offset - offset;
++
++        vfree(header);
++
++        *pparts = parts;
++        return nr_parts;
++
++err_free_parts:
++        kfree(parts);
++err:
++        *pparts = NULL;
++        return ret;
++}
++
+ static struct mtd_part_parser tplink_parser = {
+ 	.owner		= THIS_MODULE,
+ 	.parse_fn	= tplink_parse_partitions,
+ 	.name		= "tp-link",
+ };
+ 
++static struct mtd_part_parser airbat_parser = {
++        .owner          = THIS_MODULE,
++        .parse_fn       = airbat_parse_partitions,
++        .name           = "airbat",
++};
++
+ static int __init tplink_parser_init(void)
+ {
+ 	register_mtd_parser(&tplink_parser);
++	register_mtd_parser(&airbat_parser);
+ 
+ 	return 0;
+ }
