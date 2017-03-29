@@ -575,6 +575,22 @@ define Device/tl-wr847n-v8
 endef
 TARGET_DEVICES += tl-wr841n-v8 tl-wr841n-v9 tl-wr841n-v10 tl-wr842n-v2 tl-wr843nd-v1 tl-wr847n-v8
 
+define Device/ab-b300
+    $(Device/tplink-8mlzma)
+    BOARDNAME := B300
+    DEVICE_PROFILE := ABB300
+    TPLINK_HWID := 0xab00b300
+endef
+
+define Device/ab-c500
+    $(Device/tplink-8mlzma)
+    BOARDNAME := C500
+    DEVICE_PROFILE := ABC500
+    TPLINK_HWID := 0xab00c500
+#    CONSOLE = ttyS0,115200  dyndbg="file probe.c +p;file pci.c +p;file slot.c +p file quirks.c +p"
+endef
+TARGET_DEVICES += ab-b300 ab-c500
+
 define Device/tl-wr941nd-v5
     $(Device/tplink-4mlzma)
     BOARDNAME := TL-WR941ND-v5

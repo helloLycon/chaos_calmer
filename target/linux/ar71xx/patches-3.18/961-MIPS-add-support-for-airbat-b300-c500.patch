@@ -1,0 +1,51 @@
+Index: linux/arch/mips/ath79/Kconfig
+===================================================================
+--- linux.orig/arch/mips/ath79/Kconfig
++++ linux/arch/mips/ath79/Kconfig
+@@ -1103,6 +1103,23 @@ config ATH79_MACH_TL_WR841N_V9
+        select ATH79_DEV_M25P80
+        select ATH79_DEV_WMAC
+ 
++config ATH79_MACH_AB_B300
++       bool "AIRBAT B300 support"
++       select SOC_QCA953X
++       select ATH79_DEV_ETH
++       select ATH79_DEV_GPIO_BUTTONS
++       select ATH79_DEV_LEDS_GPIO
++       select ATH79_DEV_M25P80
++       select ATH79_DEV_WMAC
++
++config ATH79_MACH_AB_C500
++        bool "AIRBAT C500 support"
++        select SOC_QCA953X
++        select ATH79_PCI_AB9531
++        select ATH79_DEV_ETH
++        select ATH79_DEV_M25P80
++        select ATH79_DEV_WMAC
++
+ config ATH79_MACH_TL_WR941ND
+ 	bool "TP-LINK TL-WR941ND support"
+ 	select SOC_AR913X
+Index: linux/arch/mips/ath79/Makefile
+===================================================================
+--- linux.orig/arch/mips/ath79/Makefile
++++ linux/arch/mips/ath79/Makefile
+@@ -171,3 +171,5 @@ obj-$(CONFIG_ATH79_MACH_WZR_450HP2)	+= m
+ obj-$(CONFIG_ATH79_MACH_ZCN_1523H)	+= mach-zcn-1523h.o
+ obj-$(CONFIG_ATH79_MACH_CARAMBOLA2)	+= mach-carambola2.o
+ obj-$(CONFIG_ATH79_MACH_NBG6716)	+= mach-nbg6716.o
++obj-$(CONFIG_ATH79_MACH_AB_B300)        += mach-ab-b300.o
++obj-$(CONFIG_ATH79_MACH_AB_C500)        += mach-ab-c500.o
+Index: linux/arch/mips/ath79/machtypes.h
+===================================================================
+--- linux.orig/arch/mips/ath79/machtypes.h
++++ linux/arch/mips/ath79/machtypes.h
+@@ -170,6 +170,8 @@ enum ath79_mach_type {
+ 	ATH79_MACH_TL_WR842N_V2,	/* TP-LINK TL-WR842N/ND v2 */
+ 	ATH79_MACH_TL_WR941ND,		/* TP-LINK TL-WR941ND */
+ 	ATH79_MACH_TL_WR941ND_V5,	/* TP-LINK TL-WR941ND v5 */
++        ATH79_MACH_AB_B300,             /* AIRBAT B300 */
++        ATH79_MACH_AB_C500,             /* AIRBAT C500 */
+ 	ATH79_MACH_TUBE2H,		/* Alfa Network Tube2H */
+ 	ATH79_MACH_UBNT_AIRGW,		/* Ubiquiti AirGateway */
+ 	ATH79_MACH_UBNT_AIRROUTER,	/* Ubiquiti AirRouter */

@@ -317,6 +317,8 @@ platform_check_image() {
 	onion-omega | \
 	oolite | \
 	smart-300 | \
+        b300 | \
+        c500 | \
 	tl-mr10u | \
 	tl-mr11u | \
 	tl-mr12u | \

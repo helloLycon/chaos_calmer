@@ -257,6 +257,12 @@ tplink_board_detect() {
 	"c70000"*)
 		model="TP-Link Archer C7"
 		;;
+        "ab00b300")
+                model="Airbat B300"
+                ;;
+        "ab00c500")
+                model="Airbat C500"
+                ;;
 	*)
 		hwver=""
 		;;
@@ -944,6 +950,12 @@ ar71xx_board_detect() {
 	*"HiWiFi HC6361")
 		name="hiwifi-hc6361"
 		;;
+        "AIRBAT B300"*)
+                name="b300"
+                ;;
+        "AIRBAT C500"*)
+                name="c500"
+                ;;
 	esac
 
 	[ -z "$AR71XX_MODEL" ] && [ "${machine:0:8}" = 'TP-LINK ' ] && \

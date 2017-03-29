@@ -236,6 +236,14 @@ wnr1000-v2)
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
 	;;
 
+b300)
+        ucidef_set_interfaces_lan_wan "eth1" "eth0"
+        ;;
+
+c500)
+        ucidef_set_interfaces_lan_wan "eth0" "eth1"
+        ;;
+
 uap-pro)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ucidef_add_switch "switch0" "1" "1"
