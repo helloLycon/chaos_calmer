@@ -76,13 +76,13 @@ Index: linux/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 ===================================================================
 --- linux.orig/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
 +++ linux/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
-@@ -302,6 +302,9 @@
+@@ -320,6 +320,9 @@
  #define QCA953X_PLL_CPU_CONFIG_REG		0x00
  #define QCA953X_PLL_DDR_CONFIG_REG		0x04
  #define QCA953X_PLL_CLK_CTRL_REG		0x08
-+#define QCA953X_PLL_PCIE_CFG_REG                0x10
-+#define QCA953X_PLL_PCIE_DITHER_DIV_MAX_REG     0x14
-+#define QCA953X_PLL_PCIE_DITHER_DIV_MIX_REG     0x18
++#define QCA953X_PLL_PCIE_CFG_REG		0x10
++#define QCA953X_PLL_PCIE_DITHER_DIV_MAX_REG	0x14
++#define QCA953X_PLL_PCIE_DITHER_DIV_MIX_REG	0x18
+ #define QCA953X_PLL_SWITCH_CLOCK_CONTROL_REG	0x24
  #define QCA953X_PLL_ETH_XMII_CONTROL_REG	0x2c
  #define QCA953X_PLL_ETH_SGMII_CONTROL_REG	0x48
- 
