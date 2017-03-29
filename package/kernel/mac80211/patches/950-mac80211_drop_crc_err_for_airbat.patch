@@ -1,0 +1,18 @@
+Index: compat-wireless-2015-03-09/net/mac80211/rx.c
+===================================================================
+--- compat-wireless-2015-03-09.orig/net/mac80211/rx.c
++++ compat-wireless-2015-03-09/net/mac80211/rx.c
+@@ -488,6 +488,13 @@ ieee80211_rx_monitor(struct ieee80211_lo
+ 			dev_kfree_skb(skb);
+ 			return NULL;
+ 		}
++
++		/* airbat: drop crc err skbuf */
++		if (status->flag & (RX_FLAG_FAILED_FCS_CRC |
++		    RX_FLAG_FAILED_PLCP_CRC)){
++			dev_kfree_skb(skb);
++			return NULL;
++		}
+ 	} else {
+ 		/*
+ 		 * Need to make a copy and possibly remove radiotap header
