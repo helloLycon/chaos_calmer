@@ -1,0 +1,88 @@
+Index: linux/arch/mips/ath79/Kconfig
+===================================================================
+--- linux.orig/arch/mips/ath79/Kconfig
++++ linux/arch/mips/ath79/Kconfig
+@@ -1363,6 +1363,11 @@ config ATH79_DEV_AP9X_PCI
+ 	select ATH79_PCI_ATH9K_FIXUP
+ 	def_bool n
+ 
++config ATH79_PCI_AB9531
++        select HW_HAS_PCI
++        select PCI_AR724X
++        def_bool n
++
+ config ATH79_DEV_DSA
+ 	def_bool n
+ 
+Index: linux/arch/mips/ath79/Makefile
+===================================================================
+--- linux.orig/arch/mips/ath79/Makefile
++++ linux/arch/mips/ath79/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_PCI)			+= pci.o
+ #
+ obj-y					+= dev-common.o
+ obj-$(CONFIG_ATH79_DEV_AP9X_PCI)	+= dev-ap9x-pci.o
++obj-$(CONFIG_ATH79_PCI_AB9531)		+= pci-ab9531.o
+ obj-$(CONFIG_ATH79_DEV_DSA)		+= dev-dsa.o
+ obj-$(CONFIG_ATH79_DEV_ETH)		+= dev-eth.o
+ obj-$(CONFIG_ATH79_DEV_GPIO_BUTTONS)	+= dev-gpio-buttons.o
+Index: linux/arch/mips/ath79/pci.c
+===================================================================
+--- linux.orig/arch/mips/ath79/pci.c
++++ linux/arch/mips/ath79/pci.c
+@@ -53,6 +53,15 @@ static const struct ath79_pci_irq ar724x
+ 	}
+ };
+ 
++static const struct ath79_pci_irq qca953x_pci_irq_map[] __initconst = {
++        {
++                .bus    = 0,
++                .slot   = 0,
++                .pin    = 1,
++                .irq    = ATH79_PCI_IRQ(0),
++        },
++};
++
+ static const struct ath79_pci_irq qca955x_pci_irq_map[] __initconst = {
+ 	{
+ 		.bus	= 0,
+@@ -98,6 +107,9 @@ int __init pcibios_map_irq(const struct
+ 			   soc_is_ar9344()) {
+ 			ath79_pci_irq_map = ar724x_pci_irq_map;
+ 			ath79_pci_nr_irqs = ARRAY_SIZE(ar724x_pci_irq_map);
++                } else if (soc_is_qca953x()) {
++                        ath79_pci_irq_map = qca953x_pci_irq_map;
++                        ath79_pci_nr_irqs = ARRAY_SIZE(qca953x_pci_irq_map);
+ 		} else if (soc_is_qca955x()) {
+ 			ath79_pci_irq_map = qca955x_pci_irq_map;
+ 			ath79_pci_nr_irqs = ARRAY_SIZE(qca955x_pci_irq_map);
+@@ -303,6 +315,15 @@ int __init ath79_register_pci(void)
+ 						 AR724X_PCI_MEM_SIZE,
+ 						 0,
+ 						 ATH79_IP2_IRQ(0));
++        } else if (soc_is_qca9533()) {
++                pdev = ath79_register_pci_ar724x(0,
++                                                 QCA953X_PCI_CFG_BASE0,
++                                                 QCA953X_PCI_CTRL_BASE0,
++                                                 QCA953X_PCI_CRP_BASE0,
++                                                 QCA953X_PCI_MEM_BASE0,
++                                                 QCA953X_PCI_MEM_SIZE,
++                                                 0,
++                                                 ATH79_IP2_IRQ(0));
+ 	} else if (soc_is_qca9558()) {
+ 		pdev = ath79_register_pci_ar724x(0,
+ 						 QCA955X_PCI_CFG_BASE0,
+Index: linux/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
+===================================================================
+--- linux.orig/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
++++ linux/arch/mips/include/asm/mach-ath79/ar71xx_regs.h
+@@ -302,6 +302,9 @@
+ #define QCA953X_PLL_CPU_CONFIG_REG		0x00
+ #define QCA953X_PLL_DDR_CONFIG_REG		0x04
+ #define QCA953X_PLL_CLK_CTRL_REG		0x08
++#define QCA953X_PLL_PCIE_CFG_REG                0x10
++#define QCA953X_PLL_PCIE_DITHER_DIV_MAX_REG     0x14
++#define QCA953X_PLL_PCIE_DITHER_DIV_MIX_REG     0x18
+ #define QCA953X_PLL_ETH_XMII_CONTROL_REG	0x2c
+ #define QCA953X_PLL_ETH_SGMII_CONTROL_REG	0x48
+ 
