@@ -1,0 +1,89 @@
+Index: linux/arch/mips/ath79/mach-ab-c500.c
+===================================================================
+--- linux.orig/arch/mips/ath79/mach-ab-c500.c
++++ linux/arch/mips/ath79/mach-ab-c500.c
+@@ -15,6 +15,7 @@
+ #include <asm/mach-ath79/ar71xx_regs.h>
+ 
+ #include "common.h"
++#include "dev-ap9x-pci.h"
+ #include "dev-eth.h"
+ #include "pci.h"
+ #include "dev-usb.h"
+@@ -31,17 +32,18 @@ static const char *ab_c500_part_probes[]
+ static struct flash_platform_data ab_c500_flash_data = {
+         .part_probes    = ab_c500_part_probes,
+ };
+-
+-static void __init ab_c500_setup(void)
++static void ab_9531_common_setup(void)
+ {
+ 	u8 *mac = (u8 *) KSEG1ADDR(0x1f01fc00);
+-	u8 *ee = (u8 *) KSEG1ADDR(0x1fff1000);
++	u8 *art = (u8 *) KSEG1ADDR(0x1fff0000);
+ 	u8 tmpmac[ETH_ALEN];
+ 
+ 	ath79_register_m25p80(&ab_c500_flash_data);
+ 
+-	ath79_setup_ar933x_phy4_switch(false, false);
++	ath79_init_mac(tmpmac, mac, -1);
++	ath79_register_wmac(art + 0x1000, tmpmac);
+ 
++	ath79_setup_ar933x_phy4_switch(false, false);
+ 	ath79_register_mdio(0, 0x0);
+ 
+ 	/* LAN */
+@@ -60,12 +62,13 @@ static void __init ab_c500_setup(void)
+ 	ath79_init_mac(ath79_eth0_data.mac_addr, mac, 1);
+ 	ath79_register_eth(0);
+ 
+-	ath79_init_mac(tmpmac, mac, 0);
+-	ath79_register_wmac(ee, tmpmac);
+-	
++}
++
++static void __init ab_c500_setup(void)
++{
++	ab_9531_common_setup();
+ 	/* usb */
+ 	ath79_register_usb();
+-	
+ 	/* pcie */
+ 	ab_pcie_init();
+ 	ath79_register_pci();
+@@ -73,3 +76,23 @@ static void __init ab_c500_setup(void)
+ 
+ MIPS_MACHINE(ATH79_MACH_AB_C500, "C500", "AIRBAT C500 reference board",
+ 	     ab_c500_setup);
++static void __init ab_c501_setup(void)
++{
++	u8 *mac = (u8 *) KSEG1ADDR(0x1f01fc00);
++	u8 *art = (u8 *) KSEG1ADDR(0x1fff0000);
++	u8 tmpmac[ETH_ALEN];
++
++	ab_9531_common_setup();
++	ab_pcie_init();
++
++	ath79_init_mac(tmpmac, mac, -2);
++//	ap9x_pci_setup_wmac_led_pin(0, 0);
++	ap91_pci_init(art + 0x5000, tmpmac);
++	/* usb */
++	ath79_register_usb();
++}
++
++MIPS_MACHINE(ATH79_MACH_AB_C501, "C501", "AIRBAT C501 reference board",
++	     ab_c501_setup);
++
++
+Index: linux/arch/mips/ath79/machtypes.h
+===================================================================
+--- linux.orig/arch/mips/ath79/machtypes.h
++++ linux/arch/mips/ath79/machtypes.h
+@@ -172,6 +172,7 @@ enum ath79_mach_type {
+ 	ATH79_MACH_TL_WR941ND_V5,	/* TP-LINK TL-WR941ND v5 */
+         ATH79_MACH_AB_B300,             /* AIRBAT B300 */
+         ATH79_MACH_AB_C500,             /* AIRBAT C500 */
++        ATH79_MACH_AB_C501,             /* AIRBAT C501 */
+ 	ATH79_MACH_TUBE2H,		/* Alfa Network Tube2H */
+ 	ATH79_MACH_UBNT_AIRGW,		/* Ubiquiti AirGateway */
+ 	ATH79_MACH_UBNT_AIRROUTER,	/* Ubiquiti AirRouter */

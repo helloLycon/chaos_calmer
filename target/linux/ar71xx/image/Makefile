@@ -589,7 +589,14 @@ define Device/ab-c500
     TPLINK_HWID := 0xab00c500
 #    CONSOLE = ttyS0,115200  dyndbg="file probe.c +p;file pci.c +p;file slot.c +p file quirks.c +p"
 endef
-TARGET_DEVICES += ab-b300 ab-c500
+
+define Device/ab-c501
+    $(Device/tplink-8mlzma)
+    BOARDNAME := C501
+    DEVICE_PROFILE := ABC500
+    TPLINK_HWID := 0xab00c500
+endef
+TARGET_DEVICES += ab-b300 ab-c500 ab-c501
 
 define Device/tl-wr941nd-v5
     $(Device/tplink-4mlzma)
