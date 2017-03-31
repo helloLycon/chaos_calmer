@@ -104,6 +104,9 @@ void ab_pcie_init(void)
 		qca_pcie0_rst_en();
 		qca_pcie0_rst_di();
 		iounmap(ath79_pcie_base);
+		/*this code from uboot ,so should delay for mac start*/
+		mdelay(10);
+		mdelay(10);
 	}
 }
 EXPORT_SYMBOL_GPL(ab_pcie_init);
