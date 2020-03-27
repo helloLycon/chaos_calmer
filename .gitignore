@@ -1,6 +1,7 @@
 *.o
 .DS_Store
 .*.swp
+*.si4project/
 /env
 /dl
 /.config
