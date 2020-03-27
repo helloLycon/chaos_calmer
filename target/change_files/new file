@@ -1,0 +1,14 @@
+mach-tl-wr841n-v8.c huatong_cpe007
+mach-tl-wr841n-v8.c.A506   tl_wr842n_v2  网卡厂家9341路由板
+wdr3500          中端室外采集仪，红色主板
+mach-tl-wr841n-v9.c  W300
+
+
+cat build_dir/target-mips_34kc_uClibc-0.9.33.2/linux-ar71xx_generic/compat-wireless-2015-03-09/net/mac80211/rx.c | grep airbat    删除了crc校验
+
+cat /media/Chaos_Calmer15.05.1/openwrt/build_dir/target-mips_34kc_uClibc-0.9.33.2/procd-2015-10-29.1/signal.c | grep poweroff
+46~47行删除SIGUSR处理
+
+./package/base-files/files/lib/preinit/80_mount_root
+
+echo "CONFIG_ATH_USER_REGD=y" >> .config              //开启13信道

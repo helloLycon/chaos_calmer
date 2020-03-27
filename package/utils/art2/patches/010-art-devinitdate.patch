@@ -1,0 +1,18 @@
+--- a/driver/linux/modules/dk_pci_bus.c
++++ b/driver/linux/modules/dk_pci_bus.c
+@@ -10,7 +10,7 @@
+ #define OWL_PB42
+ #endif
+ 
+-
++#define __devinitdata
+ 
+ 
+ #if defined(OWL_PB42) || defined(PYTHON_EMU)
+@@ -487,4 +487,4 @@ INT32 bus_cfg_write
+ 
+ 	return ret;
+ }
+-#endif
+\ No newline at end of file
++#endif
