@@ -4,7 +4,7 @@
 *.si4project/
 /env
 /dl
-/.config
+#/.config
 /.config.old
 /bin
 /build_dir
